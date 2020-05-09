@@ -20,6 +20,9 @@ buildscript {
             url = uri('https://repo.maven.apache.org/maven2')
         }
     }
+    dependencies {
+        classpath 'ro.isdc.wro4j.gradle:wro4j-gradle-plugin:1.8.0.Beta4'
+    }
 }
 
 
@@ -29,6 +32,8 @@ plugins {
     id 'maven-publish'
 }
 
+apply plugin: 'wro4j'
+
 group = 'org.springframework.samples'
 version = '2.3.0.BUILD-SNAPSHOT'
 description = 'petclinic'
@@ -36,6 +41,10 @@ sourceCompatibility = '1.8'
 
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
+}
+
+ext {
+    versionBootstrap = '3.3.6'
 }
 
 repositories {
@@ -54,6 +63,8 @@ repositories {
 }
 
 dependencies {
+    webjars "org.webjars:bootstrap:${versionBootstrap}"
+
     implementation "org.springframework.boot:spring-boot-starter-actuator:${springBootVersion}"
     implementation "org.springframework.boot:spring-boot-starter-cache:${springBootVersion}"
     implementation "org.springframework.boot:spring-boot-starter-data-jpa:${springBootVersion}"
@@ -74,6 +85,18 @@ dependencies {
     testImplementation "org.mockito:mockito-junit-jupiter:3.3.3"
 }
 
+webResources {
+    setSrcMainDir project.file("src/main/less")
+    setDstStaticFolder "static/resources/css"
+
+    bundle('petclinic') {
+        css "webjars/bootstrap/$versionBootstrap/less/bootstrap.less"
+        css "petclinic.less"
+
+        preProcessor "lessCssImport"
+        postProcessor 'less4j'
+    }
+}
 
 publishing {
     publications {
