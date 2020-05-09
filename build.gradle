@@ -29,6 +29,7 @@ buildscript {
 plugins {
     id 'java'
     id 'org.springframework.boot' version '2.2.7.RELEASE'
+    id 'jacoco'
     id 'maven-publish'
 }
 
@@ -45,6 +46,10 @@ tasks.withType(JavaCompile) {
 
 ext {
     versionBootstrap = '3.3.6'
+}
+
+jacoco {
+    toolVersion = '0.8.5'
 }
 
 repositories {
@@ -95,6 +100,37 @@ webResources {
 
         preProcessor "lessCssImport"
         postProcessor 'less4j'
+    }
+}
+
+test {
+    useJUnitPlatform()
+    finalizedBy jacocoTestReport // report is always generated after tests run
+}
+
+jacocoTestReport {
+    dependsOn test
+
+    reports {
+        html.enabled true
+    }
+
+    finalizedBy 'jacocoTestCoverageVerification'
+}
+
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            enabled = false
+
+            element = 'CLASS'
+
+            limit {
+                counter = 'LINE'
+                value = 'TOTALCOUNT'
+                maximum = 0.3
+            }
+        }
     }
 }
 
