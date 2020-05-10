@@ -22,6 +22,7 @@ buildscript {
     }
     dependencies {
         classpath 'ro.isdc.wro4j.gradle:wro4j-gradle-plugin:1.8.0.Beta4'
+        classpath "io.spring.javaformat:spring-javaformat-gradle-plugin:0.0.21"
     }
 }
 
@@ -36,6 +37,7 @@ plugins {
 }
 
 apply plugin: 'wro4j'
+apply plugin: 'io.spring.javaformat'
 
 group = 'org.springframework.samples'
 version = '2.3.0.BUILD-SNAPSHOT'
